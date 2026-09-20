@@ -1,443 +1,520 @@
-<html>
+<!DOCTYPE html>
+<html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Do You Want To Meet Me?</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>তুমি কি আমার সাথে দেখা করতে চাও?</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Hind+Siliguri:wght@400;500&display=swap');
 
-        :root {
-            --primary-color: #4a0e4a;
-            --secondary-color: #ff69b4;
-            --bg-color: #2a0a2a;
-            --bg-color-2: #1a061e;
-        }
+  :root{
+    --bg-1:#170810;
+    --bg-2:#3a0f1e;
+    --bg-3:#5c1a2c;
+    --parchment:#f4e8ca;
+    --parchment-2:#e7d6a6;
+    --parchment-shadow:#c9ae78;
+    --ink:#3c2116;
+    --ink-soft:#6b4a37;
+    --gold:#c9974f;
+    --gold-light:#ecce93;
+    --rose:#8f2340;
+    --rose-deep:#5a1226;
+  }
 
-        * {
-            box-sizing: border-box;
-        }
+  *{box-sizing:border-box}
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, var(--bg-color-2) 0%, var(--bg-color) 45%, var(--primary-color) 100%);
-            background-attachment: fixed;
-            color: #fff;
-            overflow-x: hidden;
-        }
+  html,body{
+    margin:0;
+    padding:0;
+    width:100%;
+    min-height:100%;
+  }
 
-        .container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            text-align: center;
-            padding: 20px;
-        }
+  body{
+    min-height:100vh;
+    font-family:'Hind Siliguri',sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 22% 20%, rgba(140,40,70,.35), transparent 45%),
+      radial-gradient(circle at 80% 78%, rgba(90,20,40,.4), transparent 50%),
+      linear-gradient(160deg,var(--bg-1) 0%,var(--bg-2) 55%,var(--bg-3) 100%);
+    background-attachment:fixed;
+    overflow-x:hidden;
+  }
 
-        h1 {
-            font-family: 'Cormorant Garamond', serif;
-            font-weight: 600;
-            font-size: 3rem;
-            margin-bottom: 2rem;
-            color: var(--secondary-color);
-            text-shadow: 2px 2px 10px rgba(255, 105, 180, 0.35);
-            transition: opacity 0.4s ease;
-        }
+  .scene{
+    min-height:100vh;
+    width:100%;
+    display:grid;
+    place-items:center;
+    padding:40px 18px;
+    position:relative;
+  }
 
-        .btn {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.1rem;
-            padding: 12px 32px;
-            margin: 12px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
+  .grain{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    opacity:.05;
+    mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
 
-        #yesBtn {
-            background: linear-gradient(135deg, var(--secondary-color), #ff1493);
-            color: #fff;
-            box-shadow: 0 4px 18px rgba(255, 105, 180, 0.35);
-        }
+  .embers{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:0;
+  }
 
-        #yesBtn:hover {
-            box-shadow: 0 4px 26px rgba(255, 105, 180, 0.65);
-            transform: translateY(-2px);
-        }
+  .ember{
+    position:absolute;
+    bottom:-4%;
+    left:var(--x);
+    width:var(--s);
+    height:var(--s);
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(236,206,147,.9),rgba(236,206,147,0) 70%);
+    animation:rise var(--dur) ease-in-out var(--delay) infinite;
+    opacity:0;
+  }
 
-        #noBtn {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            color: #fff;
-            position: absolute;
-        }
+  @keyframes rise{
+    0%{transform:translateY(0) translateX(0);opacity:0}
+    12%{opacity:.55}
+    50%{transform:translateY(-52vh) translateX(var(--sway))}
+    88%{opacity:.35}
+    100%{transform:translateY(-104vh) translateX(0);opacity:0}
+  }
 
-        #noBtn:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
+  .letter-wrap{
+    position:relative;
+    z-index:1;
+    width:min(440px,92vw);
+  }
 
-        #loveMessage {
-            font-family: 'Cormorant Garamond', serif;
-            font-weight: 600;
-            font-size: 2.1rem;
-            margin-top: 0.5rem;
-            margin-bottom: 1.5rem;
-            opacity: 0;
-            transition: opacity 0.6s ease;
-            color: var(--secondary-color);
-        }
+  .letter{
+    position:relative;
+    background:linear-gradient(160deg,var(--parchment) 0%,var(--parchment-2) 100%);
+    border-radius:4px 14px 6px 16px;
+    padding:56px 34px 40px;
+    box-shadow:
+      0 30px 70px rgba(10,2,6,.55),
+      0 2px 0 rgba(255,255,255,.25) inset;
+  }
 
-        #planForm {
-            display: none;
-            flex-direction: column;
-            align-items: stretch;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 105, 180, 0.3);
-            padding: 34px 38px;
-            border-radius: 24px;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            width: 320px;
-            max-width: 90vw;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-            opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
+  .letter::before,
+  .letter::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(160deg,var(--parchment-2),var(--parchment-shadow));
+    border-radius:inherit;
+    z-index:-1;
+  }
+  .letter::before{transform:rotate(-2.6deg) translateY(6px)}
+  .letter::after{transform:rotate(2.1deg) translateY(3px)}
 
-        #planForm.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
+  .seal{
+    position:absolute;
+    top:-30px;
+    left:50%;
+    transform:translateX(-50%);
+    width:62px;
+    height:62px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,var(--rose) 0%,var(--rose-deep) 78%);
+    box-shadow:
+      0 10px 22px rgba(0,0,0,.45),
+      inset 0 2px 3px rgba(255,255,255,.25),
+      inset 0 -4px 8px rgba(0,0,0,.4);
+    display:grid;
+    place-items:center;
+  }
 
-        .field-group {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 22px;
-            text-align: left;
-        }
+  .seal svg{width:28px;height:28px;color:var(--gold-light)}
 
-        #planForm label {
-            font-size: 0.8rem;
-            margin-bottom: 9px;
-            color: var(--secondary-color);
-            opacity: 0.95;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+  h1{
+    margin:20px 0 6px;
+    text-align:center;
+    font-family:'Noto Serif Bengali',serif;
+    font-weight:600;
+    font-size:clamp(1.7rem,6.4vw,2.35rem);
+    line-height:1.28;
+    color:var(--ink);
+  }
 
-        .input-wrap {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
+  .sub{
+    text-align:center;
+    font-family:'Noto Serif Bengali',serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:1.06rem;
+    line-height:1.5;
+    color:var(--ink-soft);
+    min-height:1.6em;
+    opacity:0;
+    transform:translateY(4px);
+    transition:opacity .5s ease,transform .5s ease;
+    margin:0 0 6px;
+  }
 
-        .input-wrap .icon {
-            position: absolute;
-            left: 14px;
-            font-size: 1rem;
-            pointer-events: none;
-            opacity: 0.85;
-            z-index: 1;
-        }
+  .sub.show{opacity:1;transform:translateY(0)}
 
-        #planForm input[type="date"],
-        #planForm input[type="text"] {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1rem;
-            padding: 12px 14px 12px 40px;
-            border: 1.5px solid rgba(255, 255, 255, 0.18);
-            border-radius: 14px;
-            width: 100%;
-            outline: none;
-            background: rgba(255, 255, 255, 0.06);
-            color: #fdeef6;
-            color-scheme: dark;
-            transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-        }
+  .divider{
+    width:64px;
+    height:1px;
+    margin:18px auto 22px;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  }
 
-        #planForm input[type="text"]::placeholder {
-            color: rgba(253, 238, 246, 0.4);
-        }
+  .actions{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:22px;
+    min-height:64px;
+    position:relative;
+  }
 
-        #planForm input[type="date"]:hover,
-        #planForm input[type="text"]:hover {
-            background: rgba(255, 255, 255, 0.09);
-        }
+  .seal-btn{
+    appearance:none;
+    border:0;
+    cursor:pointer;
+    font-family:'Hind Siliguri',sans-serif;
+    font-size:1.02rem;
+    font-weight:500;
+    color:var(--gold-light);
+    padding:14px 32px;
+    border-radius:999px;
+    background:radial-gradient(circle at 32% 28%,var(--rose) 0%,var(--rose-deep) 85%);
+    box-shadow:
+      0 10px 24px rgba(90,18,38,.45),
+      inset 0 1px 2px rgba(255,255,255,.25),
+      inset 0 -3px 6px rgba(0,0,0,.35);
+    border:1px solid rgba(236,206,147,.35);
+    transition:transform .25s ease,box-shadow .25s ease,filter .25s ease;
+  }
 
-        #planForm input[type="date"]:focus,
-        #planForm input[type="text"]:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 4px rgba(255, 105, 180, 0.2);
-            background: rgba(255, 255, 255, 0.09);
-        }
+  .seal-btn:hover{
+    transform:translateY(-2px);
+    filter:brightness(1.08);
+    box-shadow:0 14px 30px rgba(90,18,38,.55),inset 0 1px 2px rgba(255,255,255,.3),inset 0 -3px 6px rgba(0,0,0,.35);
+  }
 
-        #planForm input[type="date"]::-webkit-calendar-picker-indicator {
-            filter: invert(1) brightness(1.3) sepia(1) saturate(4) hue-rotate(280deg);
-            cursor: pointer;
-        }
+  .seal-btn:active{transform:translateY(0) scale(.97)}
 
-        #sendBtn {
-            background: linear-gradient(135deg, var(--secondary-color), #ff1493);
-            color: #fff;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.05rem;
-            padding: 13px 30px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: all 0.3s ease;
-            margin-top: 4px;
-            align-self: center;
-            box-shadow: 0 4px 18px rgba(255, 105, 180, 0.3);
-        }
+  .seal-btn.wide{width:100%;margin-top:4px}
 
-        #sendBtn:hover {
-            box-shadow: 0 4px 26px rgba(255, 105, 180, 0.6);
-            transform: translateY(-2px) scale(1.03);
-        }
+  .seal-btn:focus-visible,
+  .ribbon-btn:focus-visible,
+  input:focus-visible{
+    outline:2px solid var(--gold);
+    outline-offset:3px;
+  }
 
-        #fieldWarning {
-            font-size: 0.85rem;
-            color: #ffb3d1;
-            margin-top: -8px;
-            margin-bottom: 14px;
-            min-height: 1em;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
+  .ribbon-btn{
+    appearance:none;
+    cursor:pointer;
+    font-family:'Noto Serif Bengali',serif;
+    font-style:italic;
+    font-size:1rem;
+    color:var(--ink-soft);
+    padding:10px 22px 11px;
+    background:var(--parchment-2);
+    border:1px solid rgba(60,33,22,.25);
+    clip-path:polygon(8% 0,100% 0,100% 70%,92% 100%,0 70%,0 0);
+    opacity:1;
+    transition:opacity .5s ease,left .28s cubic-bezier(.2,.8,.2,1),top .28s cubic-bezier(.2,.8,.2,1),transform .5s ease;
+  }
 
-        #checkmark {
-            width: 70px;
-            height: 70px;
-            opacity: 0;
-            transform: scale(0.6);
-            transition: opacity 0.4s ease, transform 0.4s ease;
-            margin-top: 1.5rem;
-        }
+  .ribbon-btn.gone{
+    opacity:0;
+    transform:translateY(18px) rotate(12deg);
+    pointer-events:none;
+  }
 
-        #checkmark.show {
-            opacity: 1;
-            transform: scale(1);
-        }
+  .plan-form{
+    display:none;
+    flex-direction:column;
+    gap:22px;
+    margin-top:6px;
+    opacity:0;
+    transform:translateY(8px);
+    transition:opacity .5s ease,transform .5s ease;
+  }
 
-        .heart {
-            position: absolute;
-            pointer-events: none;
-            opacity: 0;
-            animation: float 4s ease-in infinite;
-        }
+  .plan-form.show{
+    display:flex;
+    opacity:1;
+    transform:translateY(0);
+  }
 
-        @keyframes float {
-            0% {
-                transform: translateY(0) scale(0);
-                opacity: 0;
-            }
-            50% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100vh) scale(1);
-                opacity: 0;
-            }
-        }
+  .field label{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:.9rem;
+    color:var(--ink-soft);
+    margin-bottom:9px;
+  }
 
-        .sparkle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background-color: #fff;
-            pointer-events: none;
-            opacity: 0;
-            animation: twinkle 0.8s ease-in-out infinite;
-        }
+  .field label svg{width:16px;height:16px;color:var(--gold);flex:none}
 
-        @keyframes twinkle {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 1; }
-        }
-    </style>
+  .field input{
+    width:100%;
+    border:none;
+    border-bottom:1.5px solid rgba(60,33,22,.3);
+    background:transparent;
+    padding:8px 2px 10px;
+    font-family:'Noto Serif Bengali',serif;
+    font-size:1.08rem;
+    color:var(--ink);
+    outline:none;
+    transition:border-color .25s ease;
+  }
+
+  .field input::placeholder{color:rgba(60,33,22,.4);font-style:italic}
+  .field input:hover{border-color:rgba(60,33,22,.5)}
+  .field input:focus{border-color:var(--gold)}
+
+  .warning{
+    font-family:'Hind Siliguri',sans-serif;
+    font-size:.85rem;
+    color:var(--rose);
+    min-height:1.3em;
+    opacity:0;
+    transition:opacity .3s ease;
+    margin-top:-10px;
+  }
+
+  .warning.show{opacity:1}
+
+  .confirm{
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    gap:14px;
+    padding-top:6px;
+    opacity:0;
+    transform:translateY(8px);
+    transition:opacity .6s ease,transform .6s ease;
+  }
+
+  .confirm.show{display:flex;opacity:1;transform:translateY(0)}
+
+  .postmark{
+    width:122px;
+    height:122px;
+    border-radius:50%;
+    border:2px solid var(--rose-deep);
+    display:grid;
+    place-items:center;
+    transform:rotate(-7deg);
+    mix-blend-mode:multiply;
+    position:relative;
+  }
+
+  .postmark::before{
+    content:"";
+    position:absolute;
+    inset:8px;
+    border-radius:50%;
+    border:1.5px dashed var(--rose-deep);
+    opacity:.7;
+  }
+
+  .postmark-text{
+    font-family:'Noto Serif Bengali',serif;
+    font-weight:600;
+    font-size:1.18rem;
+    color:var(--rose-deep);
+    text-align:center;
+    line-height:1.3;
+  }
+
+  .postmark-date{
+    font-family:'Hind Siliguri',sans-serif;
+    font-size:.68rem;
+    color:var(--rose-deep);
+    margin-top:3px;
+    text-align:center;
+  }
+
+  .confirm p{
+    font-family:'Noto Serif Bengali',serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:1.06rem;
+    line-height:1.6;
+    color:var(--ink-soft);
+    text-align:center;
+    max-width:280px;
+    margin:0;
+  }
+
+  @media (max-width:420px){
+    .letter{padding:50px 24px 34px}
+    .actions{gap:16px}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{
+      animation-duration:.01ms!important;
+      animation-iteration-count:1!important;
+      transition-duration:.01ms!important;
+    }
+    .ember{display:none}
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1 id="mainTitle">Do You Want To Meet Me?</h1>
-        <div id="askButtons">
-            <button id="yesBtn" class="btn">Yes</button>
-            <button id="noBtn" class="btn">No</button>
-        </div>
+<div class="grain"></div>
+<div class="scene">
+  <div class="embers" id="embers"></div>
 
-        <div id="loveMessage"></div>
-
-        <div id="planForm">
-            <div class="field-group">
-                <label for="dateInput">📅 Kobe dekha korbe?</label>
-                <div class="input-wrap">
-                    <input type="date" id="dateInput">
-                </div>
-            </div>
-
-            <div class="field-group">
-                <label for="placeInput">📍 Kothay dekha korbe?</label>
-                <div class="input-wrap">
-                    <span class="icon">📍</span>
-                    <input type="text" id="placeInput" placeholder="Jekhane dekha korte chao...">
-                </div>
-            </div>
-
-            <div id="fieldWarning"></div>
-
-            <button id="sendBtn">Send</button>
-        </div>
-
-        <svg id="checkmark" viewBox="0 0 52 52">
-            <circle cx="26" cy="26" r="24" fill="none" stroke="#ff69b4" stroke-width="3"/>
-            <path fill="none" stroke="#ff69b4" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" d="M14 27l8 8 16-16"/>
+  <div class="letter-wrap">
+    <div class="letter">
+      <div class="seal" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 20.5s-7.8-4.9-9.9-9.6C.6 7.3 2.5 4 6 4c2 0 3.5 1.1 4.5 2.6C11.5 5.1 13 4 15 4c3.5 0 5.4 3.3 3.9 6.9C16.8 15.6 12 20.5 12 20.5z"/>
         </svg>
+      </div>
+
+      <h1 id="mainTitle">তুমি কি আমার সাথে দেখা করতে চাও?</h1>
+      <p class="sub" id="subLine"></p>
+      <div class="divider"></div>
+
+      <div class="actions" id="askButtons">
+        <button id="yesBtn" class="seal-btn" type="button">হ্যাঁ</button>
+        <button id="noBtn" class="ribbon-btn" type="button">না</button>
+      </div>
+
+      <div class="plan-form" id="planForm">
+        <div class="field">
+          <label for="dateInput">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></svg>
+            কবে দেখা করবে?
+          </label>
+          <input type="date" id="dateInput">
+        </div>
+        <div class="field">
+          <label for="placeInput">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.6 7-11.5A7 7 0 0 0 5 9.5C5 14.4 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/></svg>
+            কোথায় দেখা করবে?
+          </label>
+          <input type="text" id="placeInput" placeholder="যেখানে দেখা করতে চাও...">
+        </div>
+        <div class="warning" id="fieldWarning"></div>
+        <button id="sendBtn" class="seal-btn wide" type="button">পাঠাও</button>
+      </div>
+
+      <div class="confirm" id="confirm">
+        <div class="postmark">
+          <div>
+            <div class="postmark-text">প্রেরিত</div>
+            <div class="postmark-date" id="postmarkDate"></div>
+          </div>
+        </div>
+        <p>পাঠানো হয়েছে — এখন তোমার উত্তরের অপেক্ষায় আছি।</p>
+      </div>
     </div>
+  </div>
+</div>
 
-    <script>
-        const mainTitle = document.getElementById('mainTitle');
-        const yesBtn = document.getElementById('yesBtn');
-        const noBtn = document.getElementById('noBtn');
-        const askButtons = document.getElementById('askButtons');
-        const loveMessage = document.getElementById('loveMessage');
-        const planForm = document.getElementById('planForm');
-        const dateInput = document.getElementById('dateInput');
-        const placeInput = document.getElementById('placeInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const fieldWarning = document.getElementById('fieldWarning');
-        const checkmark = document.getElementById('checkmark');
+<script>
+(() => {
+  const mainTitle = document.getElementById('mainTitle');
+  const subLine = document.getElementById('subLine');
+  const askButtons = document.getElementById('askButtons');
+  const yesBtn = document.getElementById('yesBtn');
+  const noBtn = document.getElementById('noBtn');
+  const planForm = document.getElementById('planForm');
+  const dateInput = document.getElementById('dateInput');
+  const placeInput = document.getElementById('placeInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const fieldWarning = document.getElementById('fieldWarning');
+  const confirm = document.getElementById('confirm');
+  const postmarkDate = document.getElementById('postmarkDate');
+  const embers = document.getElementById('embers');
 
-        const recipientEmail = 'sakirulislamapon@gmail.com';
+  const recipientEmail = 'sakirulislamapon@gmail.com';
 
-        yesBtn.addEventListener('click', () => {
-            mainTitle.style.display = 'none';
-            loveMessage.textContent = 'ok! Ekhon bolo, kobe r kothay dekha korte chao 🙂';
-            loveMessage.style.opacity = '1';
-            askButtons.style.display = 'none';
-            planForm.style.display = 'flex';
-            requestAnimationFrame(() => planForm.classList.add('show'));
-            createHearts();
-            createSparkles();
-        });
+  let noEscapes = 0;
+  const maxEscapes = 5;
 
-        noBtn.addEventListener('mouseover', moveButton);
-        noBtn.addEventListener('click', moveButton);
+  function moveNo() {
+    noEscapes++;
+    if (noEscapes > maxEscapes) {
+      noBtn.classList.add('gone');
+      return;
+    }
+    const pad = 16;
+    const rect = noBtn.getBoundingClientRect();
+    const maxX = window.innerWidth - rect.width - pad;
+    const maxY = window.innerHeight - rect.height - pad;
+    const x = pad + Math.random() * Math.max(1, maxX - pad);
+    const y = pad + Math.random() * Math.max(1, maxY - pad);
+    noBtn.style.position = 'fixed';
+    noBtn.style.left = `${x}px`;
+    noBtn.style.top = `${y}px`;
+  }
 
-        function moveButton() {
-            const maxX = window.innerWidth - noBtn.offsetWidth;
-            const maxY = window.innerHeight - noBtn.offsetHeight;
-            const newX = Math.random() * maxX;
-            const newY = Math.random() * maxY;
+  noBtn.addEventListener('mouseover', moveNo);
+  noBtn.addEventListener('click', (e) => { e.preventDefault(); moveNo(); });
 
-            noBtn.style.position = 'fixed';
-            noBtn.style.left = `${newX}px`;
-            noBtn.style.top = `${newY}px`;
-        }
+  yesBtn.addEventListener('click', () => {
+    askButtons.style.display = 'none';
+    mainTitle.style.display = 'none';
+    subLine.textContent = 'ঠিক আছে — এখন বলো, কবে আর কোথায় দেখা করতে চাও';
+    subLine.classList.add('show');
+    planForm.classList.add('show');
+  });
 
-        sendBtn.addEventListener('click', () => {
-            const dateVal = dateInput.value;
-            const placeVal = placeInput.value.trim();
+  sendBtn.addEventListener('click', () => {
+    const dateVal = dateInput.value;
+    const placeVal = placeInput.value.trim();
 
-            if (!dateVal || !placeVal) {
-                fieldWarning.textContent = 'Please date ar place dutai fill up koro!';
-                fieldWarning.style.opacity = '1';
-                return;
-            }
+    if (!dateVal || !placeVal) {
+      fieldWarning.textContent = 'তারিখ আর জায়গা দুটোই পূরণ করো!';
+      fieldWarning.classList.add('show');
+      return;
+    }
+    fieldWarning.classList.remove('show');
 
-            fieldWarning.style.opacity = '0';
+    const subject = encodeURIComponent('সাক্ষাৎ নিশ্চিত হয়েছে!');
+    const body = encodeURIComponent(`সে দেখা করতে রাজি হয়েছে!\n\nতারিখ: ${dateVal}\nজায়গা: ${placeVal}`);
+    window.location.href = `mailto:${recipientEmail}?subject=${subject}&body=${body}`;
 
-            const subject = encodeURIComponent('Meeting Confirmed!');
-            const body = encodeURIComponent(
-                `Se meet korte razi hoyeche!\n\nDate: ${dateVal}\nPlace: ${placeVal}`
-            );
-            const mailtoLink = `mailto:${recipientEmail}?subject=${subject}&body=${body}`;
+    const d = new Date(dateVal + 'T00:00:00');
+    postmarkDate.textContent = isNaN(d) ? dateVal : d.toLocaleDateString('bn-BD',{day:'numeric',month:'short',year:'numeric'});
 
-            window.location.href = mailtoLink;
+    planForm.classList.remove('show');
+    subLine.classList.remove('show');
+    setTimeout(() => {
+      planForm.style.display = 'none';
+      confirm.classList.add('show');
+    }, 350);
+  });
 
-            planForm.classList.remove('show');
-            setTimeout(() => {
-                planForm.style.display = 'none';
-                loveMessage.style.opacity = '0';
-                checkmark.classList.add('show');
-            }, 400);
-        });
-
-        function createHearts() {
-            setInterval(() => {
-                const heart = document.createElement('div');
-                heart.innerHTML = '❤️';
-                heart.classList.add('heart');
-                heart.style.left = Math.random() * window.innerWidth + 'px';
-                heart.style.fontSize = (Math.random() * 30 + 10) + 'px';
-                document.body.appendChild(heart);
-
-                setTimeout(() => {
-                    heart.remove();
-                }, 4000);
-            }, 300);
-        }
-
-        function createSparkles() {
-            setInterval(() => {
-                const sparkle = document.createElement('div');
-                sparkle.classList.add('sparkle');
-                sparkle.style.left = Math.random() * window.innerWidth + 'px';
-                sparkle.style.top = Math.random() * window.innerHeight + 'px';
-                document.body.appendChild(sparkle);
-
-                setTimeout(() => {
-                    sparkle.remove();
-                }, 800);
-            }, 50);
-        }
-
-        function createBackgroundEffect() {
-            const effect = document.createElement('div');
-            effect.style.position = 'fixed';
-            effect.style.width = '2px';
-            effect.style.height = '2px';
-            effect.style.background = `radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%)`;
-            effect.style.left = Math.random() * window.innerWidth + 'px';
-            effect.style.top = Math.random() * window.innerHeight + 'px';
-            effect.style.borderRadius = '50%';
-            effect.style.pointerEvents = 'none';
-            effect.style.opacity = 0;
-            document.body.appendChild(effect);
-
-            let scale = 0;
-            let opacity = 0.8;
-
-            function animate() {
-                scale += 0.03;
-                opacity -= 0.01;
-                effect.style.transform = `scale(${scale})`;
-                effect.style.opacity = opacity;
-
-                if (opacity > 0) {
-                    requestAnimationFrame(animate);
-                } else {
-                    effect.remove();
-                }
-            }
-
-            animate();
-        }
-
-        setInterval(createBackgroundEffect, 200);
-    </script>
+  function initEmbers(){
+    const count = 16;
+    for(let i=0;i<count;i++){
+      const e = document.createElement('span');
+      e.className = 'ember';
+      const size = 3 + Math.random()*5;
+      e.style.setProperty('--s', `${size}px`);
+      e.style.setProperty('--x', `${Math.random()*100}%`);
+      e.style.setProperty('--sway', `${(Math.random()*40-20)}px`);
+      e.style.setProperty('--dur', `${9 + Math.random()*8}s`);
+      e.style.setProperty('--delay', `${Math.random()*10}s`);
+      embers.appendChild(e);
+    }
+  }
+  initEmbers();
+})();
+</script>
 </body>
 </html>
