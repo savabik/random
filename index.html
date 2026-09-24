@@ -8,9 +8,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Hind+Siliguri:wght@400;500&display=swap');
 
   :root{
-    --bg-1:#170810;
-    --bg-2:#3b0f1f;
-    --bg-3:#601a2e;
+    --bg-1:#0d0509;
+    --bg-2:#2c0a15;
+    --bg-3:#530f22;
     --parchment:#f2e2bc;
     --parchment-2:#e3cb92;
     --parchment-shadow:#bd9760;
@@ -19,7 +19,9 @@
     --gold:#c68a42;
     --gold-light:#eec488;
     --rose:#9c1f3f;
-    --rose-deep:#5e1024;
+    --rose-deep:#4a0d1e;
+    --velvet:#1a0308;
+    --candle:#ffb457;
   }
 
   *{box-sizing:border-box}
@@ -36,8 +38,9 @@
     font-family:'Hind Siliguri',sans-serif;
     color:var(--ink);
     background:
-      radial-gradient(circle at 22% 20%, rgba(140,40,70,.35), transparent 45%),
-      radial-gradient(circle at 80% 78%, rgba(90,20,40,.4), transparent 50%),
+      radial-gradient(circle at 50% 8%, rgba(255,180,87,.14), transparent 38%),
+      radial-gradient(circle at 20% 22%, rgba(160,30,60,.4), transparent 46%),
+      radial-gradient(circle at 82% 80%, rgba(90,15,35,.45), transparent 52%),
       linear-gradient(160deg,var(--bg-1) 0%,var(--bg-2) 55%,var(--bg-3) 100%);
     background-attachment:fixed;
     overflow-x:hidden;
@@ -76,7 +79,7 @@
     width:var(--s);
     height:var(--s);
     border-radius:50%;
-    background:radial-gradient(circle,rgba(238,196,136,.9),rgba(238,196,136,0) 70%);
+    background:radial-gradient(circle,var(--tint,rgba(238,196,136,.9)),rgba(238,196,136,0) 70%);
     animation:rise var(--dur) ease-in-out var(--delay) infinite;
     opacity:0;
   }
@@ -93,6 +96,22 @@
     position:relative;
     z-index:1;
     width:min(440px,92vw);
+  }
+
+  .letter-wrap::before{
+    content:"";
+    position:absolute;
+    inset:-12% -14%;
+    background:radial-gradient(ellipse at 50% 40%,rgba(255,170,90,.16),transparent 68%);
+    filter:blur(18px);
+    z-index:-1;
+    animation:haloBreathe 5s ease-in-out infinite;
+    pointer-events:none;
+  }
+
+  @keyframes haloBreathe{
+    0%,100%{opacity:.6;transform:scale(.98)}
+    50%{opacity:1;transform:scale(1.03)}
   }
 
   .letter{
@@ -155,6 +174,24 @@
     place-items:center;
   }
 
+  .seal::before{
+    content:"";
+    position:absolute;
+    inset:-16px;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(255,180,87,.55),transparent 70%);
+    filter:blur(7px);
+    z-index:-1;
+    animation:candleFlicker 2.6s ease-in-out infinite;
+  }
+
+  @keyframes candleFlicker{
+    0%,100%{opacity:.55;transform:scale(.94)}
+    35%{opacity:.85;transform:scale(1.05)}
+    55%{opacity:.65;transform:scale(.98)}
+    75%{opacity:.9;transform:scale(1.08)}
+  }
+
   .seal svg{width:28px;height:28px;color:var(--gold-light)}
 
   h1{
@@ -183,6 +220,22 @@
   }
 
   .sub.show{opacity:1;transform:translateY(0)}
+
+  .teaser{
+    text-align:center;
+    font-family:'Noto Serif Bengali',serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:1rem;
+    line-height:1.55;
+    color:var(--rose-deep);
+    opacity:.85;
+    margin:0 0 4px;
+    transition:opacity .4s ease,max-height .4s ease,margin .4s ease;
+    max-height:3em;
+  }
+
+  .teaser.hide{opacity:0;max-height:0;margin:0;overflow:hidden}
 
   .divider{
     width:64px;
@@ -519,6 +572,7 @@
       </div>
 
       <h1 id="mainTitle">তুমি কি আমার সাথে দেখা করতে চাও?</h1>
+      <p class="teaser" id="teaserLine"></p>
       <p class="sub" id="subLine"></p>
       <div class="divider"></div>
 
@@ -610,7 +664,7 @@
             <div class="postmark-date" id="postmarkDate"></div>
           </div>
         </div>
-        <p>পাঠানো হয়েছে — এখন তোমার উত্তরের অপেক্ষায় আছি।</p>
+        <p>চিঠি উড়ে গেছে তোমার কাছে... এখন শুধু প্রহর গুনছি, কখন তুমি আমার হয়ে আসবে।</p>
       </div>
     </div>
   </div>
@@ -711,10 +765,13 @@
   noBtn.addEventListener('click', (e) => { e.preventDefault(); moveNo(); });
   noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveNo(); }, { passive: false });
 
+  const teaserLine = document.getElementById('teaserLine');
+
   yesBtn.addEventListener('click', () => {
     askButtons.style.display = 'none';
     mainTitle.style.display = 'none';
-    subLine.textContent = 'ঠিক আছে — এখন বলো, কবে আর কোথায় দেখা করতে চাও';
+    teaserLine.classList.add('hide');
+    subLine.textContent = 'তাহলে বলো... কোন রাতে, কোন গোপন কোণে তোমায় কাছে পাবো';
     subLine.classList.add('show');
     planForm.classList.add('show');
   });
@@ -756,6 +813,7 @@
       e.style.setProperty('--sway', `${(Math.random()*40-20)}px`);
       e.style.setProperty('--dur', `${9 + Math.random()*8}s`);
       e.style.setProperty('--delay', `${Math.random()*10}s`);
+      e.style.setProperty('--tint', Math.random() < 0.4 ? 'rgba(196,50,80,.85)' : 'rgba(238,196,136,.9)');
       embers.appendChild(e);
     }
   }
